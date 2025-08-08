@@ -10,7 +10,7 @@ from pygame import Vector2
 
 from src.scene import Scene
 
-from src.sprites import Text
+from src.sprites import Text, Button, InBlockText
 
 if TYPE_CHECKING:
     from src.app import App
@@ -28,6 +28,8 @@ class Intro(Scene):
 
         self.add_sprite('application_name', Text(self.app, Vector2(960, 540), 'Pygame Application', 48))
         self.add_sprite('tip', Text(self.app, Vector2(960, 600), 'Press any key to quit'))
+
+        self.add_sprite('button', Button(self.app, Vector2(10, 10), (100, 50), InBlockText(self.app, 'Test')))
 
     def update(self):
         self._update_tip_color()

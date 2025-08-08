@@ -121,3 +121,34 @@ class Text(Sprite):
 
     def update(self):
         pass
+
+
+class InBlockText(Text):
+    """Text to insert into other objects.
+    """
+
+    def __init__(self, app: 'App', text: str, font_size: int = 16,
+                 color: tuple[int, int, int, int] | tuple[int, int, int] = (255, 255, 255),
+                 font_path: str = os.path.join('assets', 'fonts', 'MainFont.ttf')):
+        """Initialization.
+
+        Args:
+            app: The main class of the application.
+            text: Displayed text.
+            font_size: Font size.
+            color: Font color.
+            font_path: Font path.
+        """
+        super().__init__(app, Vector2(0, 0), text, font_size, color, TextAlign.CENTER, None, font_path)
+
+    def correct_position(self, size: tuple[int, int]):
+        """Correct the position.
+        """
+        self.position.x = int(size[0] / 2) - int(self.image.get_size()[0] / 2)
+        self.position.y = int(size[1] / 2) - int(self.image.get_size()[1] / 2)
+
+    def update_view(self):
+        super().update_view()
+
+    def update(self):
+        super().update()
