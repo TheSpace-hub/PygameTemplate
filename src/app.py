@@ -131,7 +131,7 @@ class App:
     def init_scenes(self):
         """Initializing scenes.
         """
-        logging.debug('Инициализация всех сцен')
+        logging.debug('Initializing all scenes.')
         for scene in Scene.__subclasses__():
             self.register_scene(scene)
 
@@ -141,7 +141,7 @@ class App:
         Args:
             scene (Type[SceneT]): Scene class.
         """
-        logging.debug('Инициализация сцены %s', scene.__name__)
+        logging.debug('Initializing the scene %s.', scene.__name__)
         self.scenes[str(scene.__name__)] = scene(self)
         self.scenes[str(scene.__name__)].boot()
 
@@ -169,7 +169,7 @@ class App:
     def quit(self):
         """End of the application lifecycle.
         """
-        logging.info('Выход из программы')
+        logging.info('Exiting the program.')
         self.running = False
 
     @staticmethod

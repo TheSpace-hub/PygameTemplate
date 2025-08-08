@@ -1,7 +1,7 @@
 """A module for working with text.
 """
 import os.path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Self
 from enum import Enum
 
 import pygame as pg
@@ -21,7 +21,7 @@ class TextAlign(Enum):
     RIGHT = 2
 
     @classmethod
-    def apply(cls, method: int, text: 'Text'):
+    def apply(cls, method: Self, text: 'Text'):
         """Apply alignment to the text.
         """
         if method == cls.CENTER:
@@ -35,16 +35,28 @@ class Text(Sprite):
 
     def __init__(self, app: 'App', position: Vector2, text: str, font_size: int = 16,
                  color: tuple[int, int, int, int] | tuple[int, int, int] = (255, 255, 255),
-                 align: int = TextAlign.CENTER,
+                 align: TextAlign = TextAlign.CENTER,
                  max_wight: Optional[int] = None,
                  font_path: str = os.path.join('assets', 'fonts', 'MainFont.ttf'),
                  ):
+        """Initialization.
+
+        Args:
+            app: The main class of the application.
+            position: The position of the sprite on the screen.
+            text: Displayed text.
+            font_size: Font size.
+            color: Font color.
+            align: Text align.
+            max_wight: The maximum width of the text. If you exceed it, the text will be moved.
+            font_path: Font path.
+        """
         super().__init__(app, (0, 0), position)
         self.text: str = text
         self.color: tuple[int, int, int, int] | tuple[int, int, int] = color
         self.font_size: int = font_size
 
-        self.align: int = align
+        self.align: TextAlign = align
         self.max_wight: Optional[int] = max_wight
 
         self.font_path: str = font_path
@@ -109,3 +121,34 @@ class Text(Sprite):
 
     def update(self):
         pass
+
+
+class InBlockText(Text):
+    """Text to insert into other objects.
+    """
+
+    def __init__(self, app: 'App', text: str, font_size: int = 16,
+                 color: tuple[int, int, int, int] | tuple[int, int, int] = (255, 255, 255),
+                 font_path: str = os.path.join('assets', 'fonts', 'MainFont.ttf')):
+        """Initialization.
+
+        Args:
+            app: The main class of the application.
+            text: Displayed text.
+            font_size: Font size.
+            color: Font color.
+            font_path: Font path.
+        """
+        super().__init__(app, Vector2(0, 0), text, font_size, color, TextAlign.CENTER, None, font_path)
+
+    def correct_position(self, size: tuple[int, int]):
+        """Correct the position.
+        """
+        self.position.x = int(size[0] / 2) - int(self.image.get_size()[0] / 2)
+        self.position.y = int(size[1] / 2) - int(self.image.get_size()[1] / 2)
+
+    def update_view(self):
+        super().update_view()
+
+    def update(self):
+        super().update()
