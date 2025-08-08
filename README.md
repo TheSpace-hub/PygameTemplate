@@ -2,6 +2,9 @@
 
 **✨ Quick start for PyGame development with a clean modular structure**
 
+![GitHub Release](https://img.shields.io/github/v/release/TheSpace-hub/PygameTemplate?style=flat-square)
+![GitHub License](https://img.shields.io/github/license/TheSpace-hub/PygameTemplate?style=flat-square)
+
 ---
 
 ## 📂 Project Structure
