@@ -18,9 +18,9 @@ class Button(Sprite):
     """
 
     def __init__(self, app: 'App', position: Vector2, size: tuple[int, int], text: Optional[InBlockText] = None,
-                 disabled: bool = False,
                  callback: Optional[Union[Callable[[str], None]]] = None, context: Optional[str] = None,
-                 placeholder: Optional[Callable[[], pg.Surface]] = None):
+                 placeholder: Optional[Callable[[], pg.Surface]] = None,
+                 disabled: bool = False):
         """Initialization.
 
         Args:
