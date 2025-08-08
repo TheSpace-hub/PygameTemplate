@@ -13,6 +13,7 @@ from pygame import Surface
 from pygame.time import Clock
 
 from src.scene import Scene
+from src.audio import Audio
 
 # DO NOT DELETE IMPORT. It is necessary that all child classes of Scene are initialized
 from src.scenes import *  # pylint: disable=wildcard-import
@@ -45,6 +46,8 @@ class App:
         App.configure_logs()
         pg.init()
         pg.font.init()
+
+        self.audio = Audio()
 
         self.scenes: dict[str, 'Scene'] = {}
         self.current_scene: Optional['Scene'] = None

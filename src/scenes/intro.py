@@ -1,6 +1,6 @@
 """A scene module with an intro.
 """
-
+import os.path
 from typing import TYPE_CHECKING
 import pygame as pg
 from math import sin
@@ -24,6 +24,8 @@ class Intro(Scene):
         super().__init__(app)
 
     def boot(self):
+        self.app.audio.load_sound('intro', os.path.join('assets', 'sounds', 'intro.wav'))
+
         self.add_sprite('application_name', Text(self.app, Vector2(960, 540), 'Pygame Application', 48))
         self.add_sprite('tip', Text(self.app, Vector2(960, 600), 'Press any key to quit'))
 
@@ -42,7 +44,7 @@ class Intro(Scene):
         tip.update_view()
 
     def enter(self):
-        pass
+        self.app.audio.play('intro')
 
     def exit(self):
         pass
