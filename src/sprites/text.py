@@ -127,9 +127,8 @@ class InBlockText(Text):
     """Text to insert into other objects.
     """
 
-    def __init__(self, app: 'App', text: str, font_size: int = 16,
-                 color: tuple[int, int, int, int] | tuple[int, int, int] = (255, 255, 255),
-                 font_path: str = os.path.join('assets', 'fonts', 'MainFont.ttf')):
+    def __init__(self, app: 'App', text: str, color: tuple[int, int, int, int] | tuple[int, int, int] = (255, 255, 255),
+                 font_size: int = 16, font_path: str = os.path.join('assets', 'fonts', 'MainFont.ttf')):
         """Initialization.
 
         Args:
@@ -152,3 +151,21 @@ class InBlockText(Text):
 
     def update(self):
         super().update()
+
+
+class TextSettings(InBlockText):
+    """Future text settings.
+    """
+
+    def __init__(self, app: 'App', font_size: int = 16,
+                 color: tuple[int, int, int, int] | tuple[int, int, int] = (255, 255, 255),
+                 font_path: str = os.path.join('assets', 'fonts', 'MainFont.ttf')):
+        """Initialization.
+
+        Args:
+            app: The main class of the application.
+            font_size: Font size.
+            color: Font color.
+            font_path: Font path.
+        """
+        super().__init__(app, '', color, font_size, font_path)
