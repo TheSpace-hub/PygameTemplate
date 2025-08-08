@@ -64,4 +64,8 @@ game_template/
     - Use the base `Sprite` class for automatic image handling.
 
 3. **Manage assets**:
-    - Place images in `assets/images/`, sounds in `assets/sounds/`.  
+    - Place images in `assets/images/`, sounds in `assets/sounds/`.
+
+## 📜 License
+
+This template is MIT Licensed, inspired by [original project](https://github.com/ArtBIT/pygame-template) by [ArtBIT].
