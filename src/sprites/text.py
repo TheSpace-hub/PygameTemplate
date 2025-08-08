@@ -1,0 +1,111 @@
+"""A module for working with text.
+"""
+import os.path
+from typing import TYPE_CHECKING, Optional
+from enum import Enum
+
+import pygame as pg
+from pygame import SRCALPHA, Vector2
+
+from src.sprite import Sprite
+
+if TYPE_CHECKING:
+    from src.app import App
+
+
+class TextAlign(Enum):
+    """Text alignment.
+    """
+    CENTER = 0
+    LEFT = 1
+    RIGHT = 2
+
+    @classmethod
+    def apply(cls, method: int, text: 'Text'):
+        """Apply alignment to the text.
+        """
+        if method == cls.CENTER:
+            text.position.x -= text.image.get_size()[0] / 2
+            text.position.y -= text.image.get_size()[1] / 2
+
+
+class Text(Sprite):
+    """The class responsible for the text.
+    """
+
+    def __init__(self, app: 'App', position: Vector2, text: str, font_size: int = 16,
+                 color: tuple[int, int, int, int] | tuple[int, int, int] = (255, 255, 255),
+                 align: int = TextAlign.CENTER,
+                 max_wight: Optional[int] = None,
+                 font_path: str = os.path.join('assets', 'fonts', 'MainFont.ttf'),
+                 ):
+        super().__init__(app, (0, 0), position)
+        self.text: str = text
+        self.color: tuple[int, int, int, int] | tuple[int, int, int] = color
+        self.font_size: int = font_size
+
+        self.align: int = align
+        self.max_wight: Optional[int] = max_wight
+
+        self.font_path: str = font_path
+
+        self.update_view()
+
+        TextAlign.apply(align, self)
+
+    def update_view(self):
+        self.image = pg.Surface(self._get_surface_size(), SRCALPHA, 32).convert_alpha()
+        for line, text in enumerate(self._get_lines()):
+            self.image.blit(
+                pg.font.Font(self.font_path, self.font_size).render(text, True, self.color),
+                (0, line * self._get_line_height()))
+
+    def _get_lines(self) -> list[str]:
+        """Getting lines from text if a width limit is set.
+
+        Returns:
+            A list of strings.
+        """
+        if self.text is None:
+            return []
+        elif self.max_wight is None:
+            return [self.text]
+
+        lines: list[str] = []
+        line: str = ''
+        for word in self.text.split():
+            if pg.font.Font(self.font_path, self.font_size).render(line + ' ' + word, True, (0, 0, 0)).get_size()[
+                0] > self.max_wight:
+                lines.append(line[:])
+                line = ''
+            line += ' ' + word
+
+        if line != '':
+            lines.append(line)
+
+        return lines
+
+    def _get_line_height(self) -> int:
+        """Getting the line height.
+
+        Returns:
+            Row height
+        """
+        return pg.font.Font(self.font_path, self.font_size).render('#', True, (0, 0, 0)).get_size()[1]
+
+    def _get_surface_size(self) -> tuple[int, int]:
+        """Getting the image size.
+
+        Returns:
+            Getting the image size.
+        """
+        wight = pg.font.Font(self.font_path, self.font_size).render(self.text, True, self.color).get_size()[0]
+        if self.max_wight is not None and self.max_wight < wight:
+            wight = self.max_wight
+
+        height: int = self._get_line_height() * len(self._get_lines())
+
+        return wight, height
+
+    def update(self):
+        pass
