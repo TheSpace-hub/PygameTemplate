@@ -15,6 +15,13 @@ if TYPE_CHECKING:
 
 class Button(Sprite):
     """The class that implements the button.
+
+    Attributes:
+        text: The text that is displayed on the button.
+        placeholder: An image that can be inserted into the button.
+        disabled: A flag indicating whether the button is working.
+        callback: The function that is called when interacting with the button.
+        context: The context in which the button is called. It will be passed to the function when the button is clicked.
     """
 
     def __init__(self, app: 'App', position: Vector2, size: tuple[int, int], text: Optional[InBlockText] = None,
