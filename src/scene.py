@@ -76,21 +76,21 @@ class Scene(ABC):
         return obj
 
     @abstractmethod
-    def boot(self):
+    async def boot(self):
         """It starts when the scene is registered.
         """
 
     @abstractmethod
-    def update(self):
+    async def update(self):
         """Updating the scene.
         """
 
     @abstractmethod
-    def enter(self):
+    async def enter(self):
         """Called when going to the stage.
         """
 
     @abstractmethod
-    def exit(self):
+    async def exit(self):
         """Called when exiting the scene.
         """

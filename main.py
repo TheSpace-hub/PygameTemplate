@@ -9,7 +9,8 @@ async def main():
     """The function starts when the program is started.
     """
     app = App()
-    app.change_scene('Intro')
+    await app.init_scenes()
+    await app.change_scene('Intro')
     await app.loop()
 
 

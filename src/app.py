@@ -70,8 +70,6 @@ class App:
 
         pg.display.set_caption('Pygame Application')
 
-        self.init_scenes()
-
     async def loop(self):
         """The start of the application lifecycle.
         """
@@ -112,13 +110,13 @@ class App:
         """Updating the active scene.
         """
         if self.current_scene:
-            self.current_scene.update()
+            await self.current_scene.update()
             tasks: list[Awaitable[None]] = []
             for sprite in list(self.current_scene.sprites.values()):
                 tasks.append(sprite.update())
             await asyncio.gather(*tasks)
 
-        self.update_view()
+            self.update_view()
 
     def update_view(self):
         """Draws objects on the active scene.
@@ -131,14 +129,16 @@ class App:
                              pg.Rect(sprite.position.x * x_factor, sprite.position.y * y_factor, 0, 0))
         pg.display.flip()
 
-    def init_scenes(self):
+    async def init_scenes(self):
         """Initializing scenes.
         """
         logging.debug('Initializing all scenes.')
+        tasks: list[Awaitable[None]] = []
         for scene in Scene.__subclasses__():
-            self.register_scene(scene)
+            tasks.append(asyncio.create_task(self.register_scene(scene)))
+        await asyncio.gather(*tasks)
 
-    def register_scene(self, scene: Type[SceneT]):
+    async def register_scene(self, scene: Type[SceneT]):
         """Registration of a new scene.
 
         Args:
@@ -146,9 +146,9 @@ class App:
         """
         logging.debug('Initializing the scene %s.', scene.__name__)
         self.scenes[str(scene.__name__)] = scene(self)
-        self.scenes[str(scene.__name__)].boot()
+        await self.scenes[str(scene.__name__)].boot()
 
-    def change_scene(self, scene: str, transmitted_data: Optional[dict[str, Any]] = None):
+    async def change_scene(self, scene: str, transmitted_data: Optional[dict[str, Any]] = None):
         """Switches the scene by the name of the scene class.
 
         Args:
@@ -162,11 +162,11 @@ class App:
             return
 
         if self.current_scene is not None:
-            self.current_scene.exit()
+            await self.current_scene.exit()
 
         self.current_scene = self.scenes[scene]
         self.transmitted_data = transmitted_data
-        self.current_scene.enter()
+        await self.current_scene.enter()
         self.transmitted_data = {}
 
     def quit(self):
