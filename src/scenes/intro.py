@@ -1,7 +1,7 @@
 """A scene module with an intro.
 """
 import os.path
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Optional, Coroutine
 import pygame as pg
 from math import sin
 import time
@@ -23,24 +23,24 @@ class Intro(Scene):
     def __init__(self, app: 'App'):
         super().__init__(app)
 
-    def boot(self):
+    async def boot(self):
         self.app.audio.load_sound('intro', os.path.join('assets', 'sounds', 'intro.wav'))
 
         self.add_sprite('application_name', Text(self.app, Vector2(960, 540), 'Pygame Application', 48))
-        self.add_sprite('tip', Text(self.app, Vector2(960, 600), 'Press any key to quit'))
+        self.add_sprite('tip', Text(self.app, Vector2(960, 600), 'Press space to quit'))
 
-        self.add_sprite('quit_button',
-                        Button(self.app, Vector2(760, 650), (400, 50),
-                               InBlockText(self.app, 'Or click on this button'),
-                               self._on_quit_button_pressed))
+        self.add_sprite('continue_button',
+                        Button(self.app, Vector2(660, 650), (600, 50),
+                               InBlockText(self.app, 'Or click on this button to continue'),
+                               self._on_continue_button_pressed))
 
-    def update(self):
+    async def update(self):
         self._update_tip_color()
 
-        if True in pg.key.get_pressed():
+        if pg.key.get_pressed()[pg.K_SPACE]:
             self.app.quit()
 
-    def enter(self):
+    async def enter(self):
         self.app.audio.play('intro')
 
     def _update_tip_color(self):
@@ -53,10 +53,10 @@ class Intro(Scene):
         tip.color = color
         tip.update_view()
 
-    def _on_quit_button_pressed(self, context: Optional[str]):
+    async def _on_continue_button_pressed(self, context: Optional[str]):
         """The handler for clicking on the button.
         """
-        self.app.quit()
+        # await self.app.change_scene('Calculator')
 
-    def exit(self):
+    async def exit(self):
         pass

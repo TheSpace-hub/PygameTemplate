@@ -1,6 +1,6 @@
 """A module that adds a button.
 """
-from typing import TYPE_CHECKING, Callable, Optional, Union
+from typing import TYPE_CHECKING, Callable, Optional, Union, Any, Coroutine
 
 import pygame as pg
 from pygame import Vector2
@@ -18,7 +18,8 @@ class Button(Sprite):
     """
 
     def __init__(self, app: 'App', position: Vector2, size: tuple[int, int], text: Optional[InBlockText] = None,
-                 callback: Optional[Union[Callable[[str], None]]] = None, context: Optional[str] = None,
+                 callback: Optional[Callable[[Optional[str]], Coroutine[Any, Any, None]]] = None,
+                 context: Optional[str] = None,
                  placeholder: Optional[Callable[[], pg.Surface]] = None,
                  disabled: bool = False):
         """Initialization.
