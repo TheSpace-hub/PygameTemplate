@@ -40,6 +40,6 @@ class Sprite(sprite.Sprite, ABC):
         self.image = Surface(self.image.get_size(), SRCALPHA, 32).convert_alpha()
 
     @abstractmethod
-    def update(self):
+    async def update(self):
         """Updates the sprite logic. Each frame is called.
         """

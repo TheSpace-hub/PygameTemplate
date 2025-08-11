@@ -119,7 +119,7 @@ class Text(Sprite):
 
         return wight, height
 
-    def update(self):
+    async def update(self):
         pass
 
 
@@ -149,8 +149,8 @@ class InBlockText(Text):
     def update_view(self):
         super().update_view()
 
-    def update(self):
-        super().update()
+    async def update(self):
+        await super().update()
 
 
 class TextSettings(InBlockText):

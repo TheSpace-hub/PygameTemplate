@@ -2,9 +2,10 @@
 
 Implements the main application cycle, scenes management (states) and rendering.
 """
+import asyncio
 import os
 import logging
-from typing import Any, TypeVar, Type, Optional
+from typing import Any, TypeVar, Type, Optional, Awaitable
 
 from colorlog import ColoredFormatter
 
@@ -71,7 +72,7 @@ class App:
 
         self.init_scenes()
 
-    def loop(self):
+    async def loop(self):
         """The start of the application lifecycle.
         """
         while self.running:
@@ -103,17 +104,19 @@ class App:
                         self._previous_mouse_location = pg.mouse.get_pos()
             self.delta_time = self.clock.tick(60) / 1000
 
-            self.update()
+            await self.update()
 
         pg.quit()
 
-    def update(self):
+    async def update(self):
         """Updating the active scene.
         """
         if self.current_scene:
             self.current_scene.update()
+            tasks: list[Awaitable[None]] = []
             for sprite in list(self.current_scene.sprites.values()):
-                sprite.update()
+                tasks.append(sprite.update())
+            await asyncio.gather(*tasks)
 
         self.update_view()
 

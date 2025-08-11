@@ -65,7 +65,7 @@ class Button(Sprite):
             placeholder: pg.Surface = self.placeholder()
             self.image.blit(placeholder, (3, 3))
 
-    def update(self):
+    async def update(self):
         if (self.app.is_mouse_move or self.app.omitted_mouse_buttons) and not self.disabled:
             self.update_view()
 

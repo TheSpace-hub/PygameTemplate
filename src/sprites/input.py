@@ -48,7 +48,7 @@ class Input(Sprite):
             0, 0, self.image.get_size()[0], self.image.get_size()[1]
         ), 3)
 
-    def update(self):
+    async def update(self):
         if 1 in self.app.omitted_mouse_buttons:
             self.selected = (self.position.x <= pg.mouse.get_pos()[0] <= self.position.x + self.image.get_size()[0] and
                              self.position.y <= pg.mouse.get_pos()[1] <= self.position.y + self.image.get_size()[1])
