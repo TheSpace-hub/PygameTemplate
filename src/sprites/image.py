@@ -65,6 +65,14 @@ class Image(Sprite):
         self.image = pg.transform.rotate(pg.transform.scale(self._origin, self._scale), angle)
         return self
 
+    def get_angle(self) -> float:
+        """Get the angle of the image.
+
+        Returns:
+            The angle of the image
+        """
+        return self._angle
+
     def update_view(self):
         pass
 
