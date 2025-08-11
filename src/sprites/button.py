@@ -39,7 +39,7 @@ class Button(Sprite):
         self.placeholder: Callable[[], pg.Surface] | None = placeholder
         self.disabled: bool = disabled
 
-        self.callback: Optional[Union[Callable[[str], None]]] = callback
+        self.callback: Optional[Callable[[Optional[str]], Coroutine[Any, Any, None]]] = callback
         self.context: Optional[str] = context
 
         text.correct_position(size)
@@ -48,12 +48,7 @@ class Button(Sprite):
     def update_view(self):
         if (self.position.x <= pg.mouse.get_pos()[0] <= self.position.x + self.image.get_size()[0] and
                 self.position.y <= pg.mouse.get_pos()[1] <= self.position.y + self.image.get_size()[1]):
-            if pg.mouse.get_pressed()[0]:
-                self.image.fill((58, 58, 58))
-                if self.app.omitted_mouse_buttons:
-                    self._call_func()
-            else:
-                self.image.fill((23, 23, 23))
+            self.image.fill((58, 58, 58) if pg.mouse.get_pressed()[0] else (23, 23, 23))
         else:
             self.image.fill((32, 32, 32))
 
@@ -70,8 +65,13 @@ class Button(Sprite):
         if (self.app.is_mouse_move or self.app.omitted_mouse_buttons) and not self.disabled:
             self.update_view()
 
-    def _call_func(self):
+            if (self.position.x <= pg.mouse.get_pos()[0] <= self.position.x + self.image.get_size()[0] and
+                    self.position.y <= pg.mouse.get_pos()[1] <= self.position.y + self.image.get_size()[1] and
+                    pg.mouse.get_pressed()[0] and self.app.omitted_mouse_buttons):
+                await self._call_func()
+
+    async def _call_func(self):
         """Calling the receiving function.
         """
         if self.callback is not None:
-            self.callback(self.context)
+            await self.callback(self.context)
