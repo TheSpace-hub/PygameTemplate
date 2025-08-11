@@ -19,6 +19,10 @@ if TYPE_CHECKING:
 
 class RocketGame(Scene):
     """A class with a rocket game.
+
+    Attributes:
+        rocket_velocity: The direction of flight of the rocket.
+        previous_turn_of_sun: Time in seconds of the previous sun frame change.
     """
 
     def __init__(self, app: 'App'):
