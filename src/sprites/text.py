@@ -24,9 +24,18 @@ class TextAlign(Enum):
     def apply(cls, method: Self, text: 'Text'):
         """Apply alignment to the text.
         """
-        if method == cls.CENTER:
-            text.position.x -= text.image.get_size()[0] / 2
-            text.position.y -= text.image.get_size()[1] / 2
+        actions: dict = {
+            cls.CENTER: [
+                lambda x: x - text.image.get_size()[0] / 2,
+                lambda y: y - text.image.get_size()[1] / 2,
+            ],
+            cls.LEFT: [
+                lambda x: x,
+                lambda y: y,
+            ]
+        }
+        text.position.x = actions[method][0](text.position.x)
+        text.position.y = actions[method][1](text.position.y)
 
 
 class Text(Sprite):
