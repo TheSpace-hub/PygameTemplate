@@ -2,8 +2,9 @@
 """
 import os.path
 from typing import TYPE_CHECKING
-import pygame as pg
+from math import atan2, pi
 
+import pygame as pg
 from pygame import Vector2
 
 from src.scene import Scene
@@ -20,7 +21,7 @@ class RocketGame(Scene):
 
     def __init__(self, app: 'App'):
         super().__init__(app)
-        self.rocket_velocity: Vector2 = Vector2(15, 0)
+        self.rocket_velocity: Vector2 = Vector2(5, 0)
 
     async def boot(self):
         self.add_sprite('sun', Image(self.app, Vector2(904, 484), os.path.join('assets', 'images', 'sun.png'),
@@ -40,10 +41,11 @@ class RocketGame(Scene):
         """
         rocket: Image = self.get_sprite('rocket')
         rocket.position += self.rocket_velocity
+        rocket.rotate(180 + atan2(self.rocket_velocity[0], self.rocket_velocity[1]) * 180 / pi)
 
         rocket_center_position: Vector2 = rocket.position + Vector2(rocket.image.get_size()[0] // 2,
                                                                     rocket.image.get_size()[1] // 2)
-        self.rocket_velocity += (Vector2(960, 540) - rocket_center_position) * .0005
+        self.rocket_velocity += (Vector2(960, 540) - rocket_center_position) * .0001
 
     async def enter(self):
         pass
