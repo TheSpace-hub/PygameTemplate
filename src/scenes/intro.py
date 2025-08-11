@@ -56,7 +56,7 @@ class Intro(Scene):
     async def _on_continue_button_pressed(self, context: Optional[str]):
         """The handler for clicking on the button.
         """
-        # await self.app.change_scene('Calculator')
+        await self.app.change_scene('RocketGame')
 
     async def exit(self):
         pass
