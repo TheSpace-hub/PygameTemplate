@@ -27,7 +27,7 @@ class Intro(Scene):
             self.add_sprite(f'lag_machine_{i}', LagMachine(self.app, Vector2(30 * i, 0)))
 
     def update(self):
-        if True in pg.key.get_pressed():
+        if pg.key.get_pressed()[pg.K_SPACE]:
             self.app.quit()
 
     def enter(self):
