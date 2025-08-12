@@ -10,7 +10,7 @@ from pygame import Vector2
 
 from src.scene import Scene
 
-from src.sprites import Waiting
+from src.sprites import Text, TextAlign, Waiting, CompletionStatus
 
 if TYPE_CHECKING:
     from src.app import App
@@ -24,7 +24,12 @@ class ConnectionToService(Scene):
         super().__init__(app)
 
     async def boot(self):
-        self.add_sprite('waiting', Waiting(self.app, Vector2(760, 620), (400, 30)))
+        self.add_sprite('delay_address',
+                        Text(self.app, Vector2(10, 10),
+                             '* Connecting to httpbin.org/delay/3',
+                             align=TextAlign.LEFT))
+        self.add_sprite('delay_waiting', Waiting(self.app, Vector2(45, 50), (400, 30),
+                                                 CompletionStatus.WORKING))
 
     async def update(self):
         pass
