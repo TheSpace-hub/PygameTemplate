@@ -40,11 +40,11 @@ class Waiting(Sprite):
 
         pg.draw.line(self.image, (255, 255, 255),
                      [
-                         dimensions_of_loading_plate[0] * self.image.get_size()[0] / 2 + self.image.get_size()[0] / 2,
+                         self.image.get_size()[0] * (dimensions_of_loading_plate[0] + 1) / 2,
                          self.image.get_size()[1] / 2
                      ],
                      [
-                         dimensions_of_loading_plate[1] * self.image.get_size()[0] / 2 + self.image.get_size()[0] / 2,
+                         self.image.get_size()[0] * (dimensions_of_loading_plate[1] + 1) / 2,
                          self.image.get_size()[1] / 2
                      ], self.image.get_size()[1])
 
