@@ -24,7 +24,7 @@ class ConnectionToService(Scene):
         super().__init__(app)
 
     async def boot(self):
-        self.add_sprite('waiting', Waiting(self.app, Vector2(510, 620), (900, 30)))
+        self.add_sprite('waiting', Waiting(self.app, Vector2(760, 620), (400, 30)))
 
     async def update(self):
         pass
