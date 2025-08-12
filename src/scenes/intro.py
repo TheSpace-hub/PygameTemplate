@@ -29,10 +29,14 @@ class Intro(Scene):
         self.add_sprite('application_name', Text(self.app, Vector2(960, 540), 'Pygame Application', 48))
         self.add_sprite('tip', Text(self.app, Vector2(960, 600), 'Press escape to quit'))
 
-        self.add_sprite('continue_button',
-                        Button(self.app, Vector2(660, 650), (600, 50),
-                               InBlockText(self.app, 'Or click on this button to continue'),
-                               self._on_continue_button_pressed))
+        self.add_sprite('watching_the_rocket_button',
+                        Button(self.app, Vector2(555, 650), (400, 50),
+                               InBlockText(self.app, 'Watching the rocket'),
+                               self._on_watching_the_rocket_button_pressed))
+        self.add_sprite('connection_to_service_button',
+                        Button(self.app, Vector2(965, 650), (400, 50),
+                               InBlockText(self.app, 'Connection to service'),
+                               self._on_connection_to_service_button_pressed))
 
     async def update(self):
         self._update_tip_color()
@@ -53,10 +57,15 @@ class Intro(Scene):
         tip.color = color
         tip.update_view()
 
-    async def _on_continue_button_pressed(self, context: Optional[str]):
+    async def _on_watching_the_rocket_button_pressed(self, context: Optional[str]):
         """The handler for clicking on the button.
         """
         await self.app.change_scene('RocketGame')
+
+    async def _on_connection_to_service_button_pressed(self, context: Optional[str]):
+        """The handler for clicking on the button.
+        """
+        await self.app.change_scene('ConnectionToService')
 
     async def exit(self):
         pass
