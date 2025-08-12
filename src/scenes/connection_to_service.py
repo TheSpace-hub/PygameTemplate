@@ -6,7 +6,11 @@ specifically simulates a delay of 5 seconds.
 """
 from typing import TYPE_CHECKING
 
+from pygame import Vector2
+
 from src.scene import Scene
+
+from src.sprites import Waiting
 
 if TYPE_CHECKING:
     from src.app import App
@@ -20,7 +24,7 @@ class ConnectionToService(Scene):
         super().__init__(app)
 
     async def boot(self):
-        pass
+        self.add_sprite('waiting', Waiting(self.app, Vector2(510, 620), (900, 30)))
 
     async def update(self):
         pass
