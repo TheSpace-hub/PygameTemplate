@@ -1,7 +1,7 @@
 """The module that adds the wait sprite.
 """
 import time
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Self
 from math import sin, cos
 from enum import Enum
 
@@ -26,6 +26,21 @@ class CompletionStatus(Enum):
     @property
     def value(self) -> tuple[int, int, int]:
         return cast(tuple[int, int, int], super().value)
+
+    @classmethod
+    def get_status_by_response_status_code(cls, code: int) -> Self:
+        """Get CompletionStatus based on the response status of the service.
+
+        Raises:
+            ValueError: If the code is not an http code.
+        """
+        if 200 <= code <= 299:
+            return CompletionStatus.SUCCESS
+        elif 100 <= code <= 199 or 300 <= code <= 399 or 400 <= code <= 499:
+            return CompletionStatus.ATTENTION
+        elif 500 <= code <= 599:
+            return CompletionStatus.ERROR
+        raise ValueError
 
 
 class Waiting(Sprite):
