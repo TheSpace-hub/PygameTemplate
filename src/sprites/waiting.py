@@ -1,8 +1,9 @@
 """The module that adds the wait sprite.
 """
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 from math import sin, cos
+from enum import Enum
 
 import pygame as pg
 
@@ -14,29 +15,67 @@ if TYPE_CHECKING:
     from src.app import App
 
 
+class CompletionStatus(Enum):
+    """Completion or work status.
+    """
+    WORKING = (78, 78, 78)
+    SUCCESS = (0, 200, 0)
+    ATTENTION = (200, 200, 0)
+    ERROR = (200, 0, 0)
+
+    @property
+    def value(self) -> tuple[int, int, int]:
+        return cast(tuple[int, int, int], super().value)
+
+
 class Waiting(Sprite):
     """Sprite class for waiting for something.
 
     Attributes:
-        done: Loading animation flag.
+        completion_status: Completion or work status.
     """
 
-    def __init__(self, app: 'App', position: Vector2, size: tuple[int, int] | None = None, done: bool = False):
+    def __init__(self, app: 'App', position: Vector2, size: tuple[int, int] | None = None,
+                 completion_status: CompletionStatus = CompletionStatus.WORKING):
         """Initialization.
 
         Args:
             app: The main class of the application.
             position: The position of the sprite on the screen.
             size: Sprite scale.
-            done: Loading animation flag.
+            completion_status: Completion or work status.
         """
         super().__init__(app, size, position)
-        self.done: bool = done
+        self.completion_status: CompletionStatus = completion_status
 
     def update_view(self):
         self.image.fill((32, 32, 32))
 
-        dimensions_of_loading_plate: tuple[float, float] = self.get_dimensions_of_loading_plate()
+        if self.completion_status == CompletionStatus.WORKING:
+            self._update_loading_plate()
+        else:
+            self.image.fill(list(map(lambda c: max(0, c - 125), self.completion_status.value)))
+
+        pg.draw.rect(self.image, self.completion_status.value, pg.Rect(
+            0, 0, self.image.get_size()[0], self.image.get_size()[1]
+        ), 3)
+
+    async def update(self):
+        self.update_view()
+
+    def _update_loading_plate(self):
+        """Animation implementation for the loading plate.
+        """
+
+        def get_dimensions_of_loading_plate() -> tuple[float, float]:
+            """Gets the width coordinate [-1; 1] of the animated element depending on the time.
+
+            Returns:
+                Tuple with start and end coordinates [-1; 1].
+            """
+            return sin(time.time() * 1.5), cos(time.time() * 1.5)
+
+        dimensions_of_loading_plate: tuple[float, float] = get_dimensions_of_loading_plate()
 
         pg.draw.line(self.image, (255, 255, 255),
                      [
@@ -47,19 +86,3 @@ class Waiting(Sprite):
                          self.image.get_size()[0] * (dimensions_of_loading_plate[1] + 1) / 2,
                          self.image.get_size()[1] / 2
                      ], self.image.get_size()[1])
-
-        pg.draw.rect(self.image, (78, 78, 78), pg.Rect(
-            0, 0, self.image.get_size()[0], self.image.get_size()[1]
-        ), 3)
-
-    async def update(self):
-        self.update_view()
-
-    @staticmethod
-    def get_dimensions_of_loading_plate() -> tuple[float, float]:
-        """Gets the width coordinate [-1; 1] of the animated element depending on the time.
-
-        Returns:
-            Tuple with start and end coordinates [-1; 1].
-        """
-        return sin(time.time() * 1.5), cos(time.time() * 1.5)
