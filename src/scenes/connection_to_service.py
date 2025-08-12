@@ -9,6 +9,7 @@ from asyncio import Task
 from typing import TYPE_CHECKING, Optional
 
 import aiohttp
+from aiohttp import ContentTypeError
 from pygame import Vector2
 
 from src.scene import Scene
@@ -69,6 +70,11 @@ class ConnectionToService(Scene):
                 waiting.completion_status = CompletionStatus.get_status_by_response_status_code(response['status'])
                 completed_keys.append(key)
 
+                if key == 'get_uuid_waiting':
+                    get_uuid_result: Text = self.get_sprite('get_uuid_result')
+                    get_uuid_result.text = f'Random UUID: {response['body']['uuid']}'
+                    get_uuid_result.update_view()
+
         for key in completed_keys:
             await self.connection_tasks.pop(key)
 
@@ -81,8 +87,15 @@ class ConnectionToService(Scene):
         """
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
-                return {
-                    'status': response.status,
-                    'headers': response.headers,
-                    'body': await response.text()
-                }
+                try:
+                    return {
+                        'status': response.status,
+                        'headers': response.headers,
+                        'body': await response.json()
+                    }
+                except ContentTypeError:
+                    return {
+                        'status': response.status,
+                        'headers': response.headers,
+                        'body': {}
+                    }
