@@ -12,17 +12,22 @@ if TYPE_CHECKING:
 
 class Waiting(Sprite):
     """Sprite class for waiting for something.
+
+    Attributes:
+        done: Loading animation flag.
     """
 
-    def __init__(self, app: 'App', position: Vector2, size: tuple[int, int] | None = None):
+    def __init__(self, app: 'App', position: Vector2, size: tuple[int, int] | None = None, done: bool = False):
         """Initialization.
 
         Args:
             app: The main class of the application.
             position: The position of the sprite on the screen.
             size: Sprite scale.
+            done: Loading animation flag.
         """
         super().__init__(app, size, position)
+        self.done: bool = done
 
     def update_view(self):
         pass
