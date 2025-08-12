@@ -2,6 +2,8 @@
 """
 from typing import TYPE_CHECKING
 
+import pygame as pg
+
 from pygame import Vector2
 
 from src.sprite import Sprite
@@ -30,7 +32,11 @@ class Waiting(Sprite):
         self.done: bool = done
 
     def update_view(self):
-        pass
+        self.image.fill((32, 32, 32))
+
+        pg.draw.rect(self.image, (78, 78, 78), pg.Rect(
+            0, 0, self.image.get_size()[0], self.image.get_size()[1]
+        ), 3)
 
     async def update(self):
-        pass
+        self.update_view()
