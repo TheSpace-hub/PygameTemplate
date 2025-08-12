@@ -25,7 +25,7 @@ class ConnectionToService(Scene):
 
     def __init__(self, app: 'App'):
         super().__init__(app)
-        self.connection_tasks: dict[str, Optional[asyncio.Task]] = {}
+        self.connection_tasks: dict[str, Optional[Task]] = {}
 
     async def boot(self):
         self.add_sprite('delay_address',
