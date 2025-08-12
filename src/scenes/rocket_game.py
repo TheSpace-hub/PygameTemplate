@@ -11,7 +11,7 @@ from pygame import Vector2
 
 from src.scene import Scene
 
-from src.sprites import Image
+from src.sprites import Image, Text, TextAlign
 
 if TYPE_CHECKING:
     from src.app import App
@@ -31,6 +31,8 @@ class RocketGame(Scene):
         self.previous_turn_of_sun: float = 0
 
     async def boot(self):
+        self.add_sprite('tip', Text(self.app, Vector2(10, 10), 'Press escape to quit',
+                                    color=(128, 128, 128), align=TextAlign.LEFT))
         self.add_sprite('sun', Image(self.app, Vector2(904, 484), os.path.join('assets', 'images', 'sun.png'),
                                      (56, 56)))
         self.add_sprite('rocket',

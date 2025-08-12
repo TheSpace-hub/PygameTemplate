@@ -27,7 +27,7 @@ class Intro(Scene):
         self.app.audio.load_sound('intro', os.path.join('assets', 'sounds', 'intro.wav'))
 
         self.add_sprite('application_name', Text(self.app, Vector2(960, 540), 'Pygame Application', 48))
-        self.add_sprite('tip', Text(self.app, Vector2(960, 600), 'Press space to quit'))
+        self.add_sprite('tip', Text(self.app, Vector2(960, 600), 'Press escape to quit'))
 
         self.add_sprite('continue_button',
                         Button(self.app, Vector2(660, 650), (600, 50),
@@ -37,7 +37,7 @@ class Intro(Scene):
     async def update(self):
         self._update_tip_color()
 
-        if pg.key.get_pressed()[pg.K_SPACE]:
+        if pg.key.get_pressed()[pg.K_ESCAPE]:
             self.app.quit()
 
     async def enter(self):
