@@ -15,7 +15,7 @@ import pygame as pg
 
 from src.scene import Scene
 
-from src.sprites import Text, TextAlign, Waiting, CompletionStatus
+from src.sprites import Text, TextAlign, Waiting, CompletionStatus, Input, TextSettings, InBlockText, Button
 
 if TYPE_CHECKING:
     from src.app import App
@@ -49,6 +49,13 @@ class ConnectionToService(Scene):
         self.add_sprite('get_uuid_result', Text(self.app, Vector2(45, 330), 'Random UUID: -',
                                                 align=TextAlign.LEFT))
         self.add_sprite('get_uuid_waiting', Waiting(self.app, Vector2(45, 290), (400, 30), CompletionStatus.WORKING))
+
+        self.add_sprite('custom_url_input', Input(self.app, Vector2(45, 400), (800, 50), TextSettings(self.app),
+                                                  InBlockText(self.app, 'Write url', (128, 128, 128)),
+                                                  default='https://httpbin.org/status/200'))
+        self.add_sprite('connect_button', Button(self.app, Vector2(855, 400), (150, 50),
+                                                 InBlockText(self.app, 'Connect'), self._on_connect_button_pressed))
+        self.add_sprite('custom_url_waiting', Waiting(self.app, Vector2(45, 460), (400, 30), CompletionStatus.HOLD))
 
     async def update(self):
         await self.update_tasks()
@@ -113,3 +120,12 @@ class ConnectionToService(Scene):
                         }
         except ClientConnectorDNSError or ClientConnectorError:
             return None
+
+    async def _on_connect_button_pressed(self, context: Optional[str]):
+        """The handler for clicking on the button.
+        """
+        url: Input = self.get_sprite('custom_url_input')
+        custom_url_waiting: Waiting = self.get_sprite('custom_url_waiting')
+
+        self.connection_tasks['custom_url_waiting'] = asyncio.create_task(self.fetch_get(url.text.text))
+        custom_url_waiting.completion_status = CompletionStatus.WORKING
