@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Optional
 
 import aiohttp
 from aiohttp import ContentTypeError, ClientConnectorDNSError, ClientConnectorError
+import webbrowser
+
 from pygame import Vector2
 import pygame as pg
 
@@ -52,9 +54,12 @@ class ConnectionToService(Scene):
 
         self.add_sprite('custom_url_input', Input(self.app, Vector2(45, 400), (800, 50), TextSettings(self.app),
                                                   InBlockText(self.app, 'Write url', (128, 128, 128)),
-                                                  default='https://httpbin.org/status/200'))
+                                                  default='https://httpbin.org/'))
         self.add_sprite('connect_button', Button(self.app, Vector2(855, 400), (150, 50),
                                                  InBlockText(self.app, 'Connect'), self._on_connect_button_pressed))
+        self.add_sprite('httpbin_docs_button', Button(self.app, Vector2(1015, 400), (100, 50),
+                                                      InBlockText(self.app, 'Docs'),
+                                                      self._on_httpbin_docs_button_pressed))
         self.add_sprite('custom_url_waiting', Waiting(self.app, Vector2(45, 460), (400, 30), CompletionStatus.HOLD))
 
     async def update(self):
@@ -129,3 +134,8 @@ class ConnectionToService(Scene):
 
         self.connection_tasks['custom_url_waiting'] = asyncio.create_task(self.fetch_get(url.text.text))
         custom_url_waiting.completion_status = CompletionStatus.WORKING
+
+    async def _on_httpbin_docs_button_pressed(self, context: Optional[str]):
+        """The handler for clicking on the button.
+        """
+        webbrowser.open('https://httpbin.org/')
