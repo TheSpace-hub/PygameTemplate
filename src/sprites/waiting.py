@@ -19,6 +19,7 @@ class CompletionStatus(Enum):
     """Completion or work status.
     """
     WORKING = (78, 78, 78)
+    HOLD = (157, 157, 157)
     SUCCESS = (0, 200, 0)
     ATTENTION = (200, 200, 0)
     ERROR = (200, 0, 0)
@@ -50,7 +51,7 @@ class Waiting(Sprite):
         completion_status: Completion or work status.
     """
 
-    def __init__(self, app: 'App', position: Vector2, size: tuple[int, int] | None = None,
+    def __init__(self, app: 'App', position: Vector2, size: tuple[int, int],
                  completion_status: CompletionStatus = CompletionStatus.WORKING):
         """Initialization.
 
