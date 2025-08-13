@@ -84,11 +84,13 @@ class App:
                     self.running = False
                 elif event.type == pg.KEYDOWN:
                     try:
-                        key = chr(event.key)
+                        key = ord(event.unicode)
+                        logging.debug('Pressing the "%s" key', key)
+                        self.omitted_buttons.append(ord(event.unicode))
                     except ValueError:
-                        key = 'unknown'
-                    logging.debug('Pressing the "%s" key', key)
-                    self.omitted_buttons.append(event.key)
+                        pass
+                    except TypeError:
+                        pass
                 elif event.type == pg.MOUSEBUTTONDOWN:
                     logging.debug('Pressing the mouse button %s', event.button)
                     self.omitted_mouse_buttons.append(event.button)
