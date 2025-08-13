@@ -9,7 +9,7 @@ from asyncio import Task
 from typing import TYPE_CHECKING, Optional
 
 import aiohttp
-from aiohttp import ContentTypeError
+from aiohttp import ContentTypeError, ClientConnectorDNSError, ClientConnectorError
 from pygame import Vector2
 import pygame as pg
 
@@ -73,9 +73,13 @@ class ConnectionToService(Scene):
             if task and task.done():
                 waiting: Waiting = self.get_sprite(key)
                 response: dict = await task
+                completed_keys.append(key)
+
+                if response is None:
+                    waiting.completion_status = CompletionStatus.ERROR
+                    continue
 
                 waiting.completion_status = CompletionStatus.get_status_by_response_status_code(response['status'])
-                completed_keys.append(key)
 
                 if key == 'get_uuid_waiting':
                     get_uuid_result: Text = self.get_sprite('get_uuid_result')
@@ -86,23 +90,26 @@ class ConnectionToService(Scene):
             await self.connection_tasks.pop(key)
 
     @staticmethod
-    async def fetch_get(url) -> dict:
+    async def fetch_get(url) -> Optional[dict]:
         """Make a get request.
 
         Returns:
             Response data.
         """
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                try:
-                    return {
-                        'status': response.status,
-                        'headers': response.headers,
-                        'body': await response.json()
-                    }
-                except ContentTypeError:
-                    return {
-                        'status': response.status,
-                        'headers': response.headers,
-                        'body': {}
-                    }
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    try:
+                        return {
+                            'status': response.status,
+                            'headers': response.headers,
+                            'body': await response.json()
+                        }
+                    except ContentTypeError:
+                        return {
+                            'status': response.status,
+                            'headers': response.headers,
+                            'body': {}
+                        }
+        except ClientConnectorDNSError or ClientConnectorError:
+            return None
