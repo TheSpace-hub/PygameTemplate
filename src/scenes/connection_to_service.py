@@ -81,7 +81,7 @@ class ConnectionToService(Scene):
 
                 waiting.completion_status = CompletionStatus.get_status_by_response_status_code(response['status'])
 
-                if key == 'get_uuid_waiting':
+                if key == 'get_uuid_waiting' and response['status'] == 200:
                     get_uuid_result: Text = self.get_sprite('get_uuid_result')
                     get_uuid_result.text = f'Random UUID: {response['body']['uuid']}'
                     get_uuid_result.update_view()
